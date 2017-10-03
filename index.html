@@ -12,12 +12,21 @@
         #fact {
             display: none;
         }
+
+        #factDate {
+            display: none;
+        }
+
+        .dateFact{
+            display: flex;
+            justify-content: space-between;
+        }
     </style>
 </head>
 <body class="bg-dark">
     <div class="container">
         <div class="row">
-            <div class="col-md-6 mx-auto mt-5 p-5">
+            <div class="col-md-6 mt-5 p-5">
                 <div class="card bg-primary text-white p-5">
                     <h1>Number Facts</h1>
                     <p>Enter a number and get a random fact</p>
@@ -33,6 +42,31 @@
                         </div>
                 </div>
             </div>
+
+                <div class="col-md-6 mt-5 p-5">
+                        <div class="card bg-success text-white p-5 ">
+                            <h1>Date Facts</h1>
+                            <p>Enter a date to get an interesting fact</p>
+                            <div class="dateFact">
+                                    <input 
+                                    type="number"
+                                    class="form-control form-control-lg"
+                                    id="monthInput" 
+                                    placeholder="Month number...">
+    
+                                    <input 
+                                    type="number"
+                                    class="form-control form-control-lg"
+                                    id="dayInput" 
+                                    placeholder="Day number...">
+                            </div>   
+
+                            <div id="factDate" class="card-body">
+                                <h4 class="card-title">Date Fact</h4>
+                                <p id="factDateText" class="card-text"></p>
+                            </div>
+                        </div>
+                </div>
         </div>
     </div>
 
@@ -41,10 +75,10 @@
         let factText = document.querySelector('#factText');
 
         let numberInput = document.querySelector('#numberInput');
-        numberInput.addEventListener('input' , getFactAjax);
+        numberInput.addEventListener('input' , getFactFetch);
 
         //AJAX Request
-        function getFactAjax() {
+        /* function getFactAjax() {
             let number = numberInput.value;
             //console.log(number);
 
@@ -60,7 +94,48 @@
             }
 
             xhr.send();
-        }
+        } */
+
+        //FETCH API for number fact
+        function getFactFetch() {
+            let number = numberInput.value;
+
+            fetch('http://numbersapi.com/'+ number)
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    if(number != '') {
+                        fact.style.display = 'block';
+                        factText.innerHTML = data;
+                    }
+                })
+                .catch(err => console.log(err));
+        } 
+
+        //FETCH API for date fact
+
+        let factDate = document.querySelector('#factDate');
+        let factDateText = document.querySelector('#factDateText');
+        let monthInput = document.querySelector('#monthInput');
+        monthInput.addEventListener('input' , getDateFactFetch);
+        let dayInput = document.querySelector('#dayInput');
+        dayInput.addEventListener('input' , getDateFactFetch);
+
+        function getDateFactFetch() {
+            let month = monthInput.value;
+            let day = dayInput.value;
+
+            fetch('http://numbersapi.com/'+ month + '/' + day + '/' + 'date')
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    if((month != '' && month < 13) && (day != '' && day <= 31)) {
+                        factDate.style.display = 'block';
+                        factDateText.innerHTML = data;
+                    }
+                })
+                .catch(err => console.log(err));
+        } 
         
     </script>
 </body>
