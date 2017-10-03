@@ -129,7 +129,10 @@
                 .then(response => response.text())
                 .then(data => {
                     console.log(data);
-                    if((month != '' && month < 13) && (day != '' && day <= 31)) {
+                    if((month == '' || month > 12) || (day == '' || day > 31)) {
+                        factDate.style.display = 'block';
+                        factDateText.innerHTML = "Invalid date!";
+                    } else {
                         factDate.style.display = 'block';
                         factDateText.innerHTML = data;
                     }
